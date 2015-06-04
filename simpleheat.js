@@ -111,7 +111,13 @@ simpleheat.prototype = {
         for (var i = 0, len = this._data.length, p; i < len; i++) {
             p = this._data[i];
 
-            ctx.globalAlpha = Math.max(p[2] / this._max, minOpacity === undefined ? 0.05 : minOpacity);
+            var intensity = Math.max(p[2] / this._max,
+                                     minOpacity === undefined ? 0.05
+                                                              : minOpacity);
+
+            // If alpha would be outside of the range of [0, 1], map it back to
+            // that range
+            ctx.globalAlpha = Math.max(Math.min(intensity, 1.0), 0.0);
             ctx.drawImage(this._circle, p[0] - this._r, p[1] - this._r);
         }
 
